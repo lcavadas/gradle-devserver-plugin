@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'groovy'
+apply plugin: 'maven'
+apply plugin: 'signing'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+sourceCompatibility = '1.6'
+targetCompatibility = '1.6'
+
+group = "com.agentparadigm"
+archivesBaseName = "gradle-devserver-plugin"
+version = "0.0.1"
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    groovy localGroovy()
+    compile gradleApi()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            repository(url: "file:///c/Users/cavadas/.m2/repository/")
+        }
+    }
+}
+//def getPomConfiguration() {
+//    return {
+//        name 'Gradle DevServer Plugin'
+//        packaging 'jar'
+//        description 'A Gradle plugin for runing a simple web-server for development.'
+//        url 'https://github.com/lcavadas/gradle-devserver-plugin'
+//        developers {
+//            developer {
+//                id 'lcavadas'
+//                name 'Luís Nuno Cavadas Serralheiro'
+//                email 'encavadas@gmail.com'
+//            }
+//        }
+//        scm {
+//            connection 'scm:https://lcavadas@github.com/stevesaliman/gradle-devserver-plugin'
+//            developerConnection 'scm:git@github.com:lcavadas/gradle-devserver-plugin.git'
+//            url 'https://github.com/lcavadas/gradle-devserver-plugin'
+//        }
+//    }
+//}
