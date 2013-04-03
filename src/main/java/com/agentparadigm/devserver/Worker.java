@@ -22,6 +22,8 @@ class Worker implements HttpConstants, Runnable {
         put(".html", "text/html");
         put(".text", "text/plain");
         put(".txt", "text/plain");
+        put(".js", "text/javascript");
+        put(".css", "text/css");
     }};
     private final String root;
 
@@ -83,22 +85,27 @@ class Worker implements HttpConstants, Runnable {
             if (!file.exists() || file.isDirectory()) {
                 send(HTTP_NOT_FOUND, out, null);
             } else {
+                BufferedReader in = new BufferedReader(new FileReader(file));
+                StringBuilder str = new StringBuilder();
+                String line;
+                while ((line = in.readLine()) != null) {
+                    str.append(line).append("\r\n");
+                }
+                in.close();
+                byte[] bytes = str.toString().getBytes();
+
                 System.out.println("Serving " + file.getAbsolutePath());
                 out.println("HTTP/1.1 " + httpResponse + " OK");
                 out.println("Date: Fri, 31 Dec 1999 23:59:59 GMT");
                 out.println("Server: lcavadas-simple/0.0.1");
-                out.println("Content-Type: " + map.get(requestedFile.substring(requestedFile.lastIndexOf(".") + 1)));
-                out.println("Content-Length: " + file.length());
+                out.println("Content-Type: " + map.get(requestedFile.substring(requestedFile.lastIndexOf("."))));
+                out.println("Content-Length: " + bytes.length);
                 out.println("Expires: Sat, 01 Jan 2000 00:59:59 GMT");
                 out.println("Last-modified: Fri, 09 Aug 1996 14:21:40 GMT");
                 out.println("");
-                BufferedReader in = new BufferedReader(new FileReader(file));
-                String line;
-                while ((line = in.readLine()) != null) {
-                    out.println(line);
-                }
+                out.write(bytes);
                 out.println("");
-                in.close();
+                out.flush();
             }
         }
     }

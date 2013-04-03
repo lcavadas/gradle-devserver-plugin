@@ -22,6 +22,11 @@ class DevServerExtension {
      */
     int workers
 
+    /**
+     * Timeout, in ms
+     */
+    int timeout
+
     private Project project
 
     /**
@@ -35,7 +40,8 @@ class DevServerExtension {
         this.project = project
 
         port = 8080
-        rootPath = ${project.buildDir.path}
+        rootPath = project.buildDir.path
         workers = 5
+        timeout = 5000
     }
 }
